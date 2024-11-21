@@ -1,7 +1,7 @@
-from decoratepy import Timer
+from decoratepy import TimerCounterLogger
 
 # Création du décorateur
-timer = Timer()
+timer = TimerCounterLogger()
 
 @timer
 def ma_fonction(x, y):
@@ -21,23 +21,19 @@ def ma_fonction4(x, y):
 
 
 # Appel d'une méthode
-print(ma_fonction(1,2))
+ma_fonction(1,2)
 
 timer.initialize()
 
-print(ma_fonction2(1,2))
+for k in range(10000):
+    ma_fonction2(1,2)
 
 timer.set_deactivated()
 
-print(ma_fonction3(1,2))
+ma_fonction3(1,2)
 
 timer.set_activated()
 
-print(ma_fonction4(1,2))
-
-
-
-
-
-
+ma_fonction4(1,2)
+print(timer.__help__)
 print(timer)

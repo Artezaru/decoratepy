@@ -3,6 +3,7 @@ from .decorator import Decorator
 from .timer import Timer
 from .counter import Counter
 from .timer_counter import TimerCounter
+from .timer_counter_logger import TimerCounterLogger
 
 __all__ = [
     "__version__",
@@ -10,4 +11,5 @@ __all__ = [
     "Timer",
     "Counter",
     "TimerCounter",
+    "TimerCounterLogger"
 ]

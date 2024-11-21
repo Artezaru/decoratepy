@@ -85,7 +85,7 @@ class Decorator(object):
     def __call__(self, func):
         def wrapped(*args, **kwargs):
             if self._activated:
-                return self.wrapper(func, *args, **kwargs)
+                return self._wrapper(func, *args, **kwargs)
             else:
                 return func(*args, **kwargs)
         return wrapped
