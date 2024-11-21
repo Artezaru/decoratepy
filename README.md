@@ -1,6 +1,7 @@
 # decoratepy
 
 ## Description
+Ready-to-use python decorators. 
 
 ## Author
 - Name: Artezaru
@@ -21,7 +22,7 @@ Clone with git
 git clone https://github.com/Artezaru/decoratepy.git
 ```
 
-## Documenation
+## Documentation
 
 Generate the documentation with sphinx
 
