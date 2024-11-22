@@ -4,6 +4,7 @@ from .timer import Timer
 from .counter import Counter
 from .timer_counter import TimerCounter
 from .timer_counter_logger import TimerCounterLogger
+from .class_propagate import class_propagate
 
 __all__ = [
     "__version__",
@@ -11,5 +12,6 @@ __all__ = [
     "Timer",
     "Counter",
     "TimerCounter",
-    "TimerCounterLogger"
+    "TimerCounterLogger",
+    "class_propagate"
 ]

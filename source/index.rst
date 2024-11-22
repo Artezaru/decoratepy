@@ -11,4 +11,5 @@ decoratepy documentation
    :caption: Contents:
 
    ./doc/decorator.rst
+   ./doc/class_propagate.rst
    ./doc/function_decorator.rst
