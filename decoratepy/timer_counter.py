@@ -7,31 +7,103 @@ class TimerCounter(Decorator):
 
     .. warning::
         If 2 functions/methods have the same '__name__' attribute, the TimerCounter will combined the two runtimes. 
+    
+    HELP TimerCounter
+    =================
+    
+    Create a timer-counter with :
+
+    .. code-block:: python
+
+        timercounter = TimerCounter()
+
+    Then decorate functions with the timer-counter. 
+
+    .. code-block:: python
+
+        @timercounter
+        def func_name():
+            pass
+
+    Initialize and clear the timer-counter with : 
+
+    .. code-block:: python
+
+        timercounter = initialize()
+
+    Use the functions and the timer-counter will compute number of calls and runtime.
+
+    To deactivate and re-activate the timer-counter, use :
+
+    .. code-block:: python
+
+        timercounter.set_activated()
+        timercounter.set_deactivated()
+
+    Print the number of calls and runtimes with :
+    
+    .. code-block:: python
+
+        print(timercounter.name_repr) # equivalent of print(timercounter)
+
+    The result will be :
+    
+    .. code-block:: console
+    
+        TimerCounter(
+        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+        -----------
+        total number of calls : {total_runcall}
+        total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
+        )
     """
 
     __help__ = """
-    # =======================
-    # HELP TimerCounter
-    # =======================
-    
-    Create a timer-counter with :  
-    >>> timercounter = TimerCounter()
-    
-    Then decorate functions with the timer-counter. (@timercounter)
+HELP TimerCounter
+=================
 
-    Initialize and clear the timer-counter with : 
-    >>> timercounter = initialize()
+Create a timer-counter with :
 
-    Use the functions and the timer-counter will compute runtimes and number of call.
+.. code-block:: python
 
-    To deactivate and re-activate the timer-counter, use :
-    >>> timercounter.set_activated()
-    >>> timercounter.set_deactivated()
+    timercounter = TimerCounter()
 
-    Print the runtimes and number of call with :
-    >>> print(timercounter)
+Then decorate functions with the timer-counter. 
 
-    The result will be :
+.. code-block:: python
+
+    @timercounter
+    def func_name():
+        pass
+
+Initialize and clear the timer-counter with : 
+
+.. code-block:: python
+
+    timercounter = initialize()
+
+Use the functions and the timer-counter will compute number of calls and runtime.
+
+To deactivate and re-activate the timer-counter, use :
+
+.. code-block:: python
+
+    timercounter.set_activated()
+    timercounter.set_deactivated()
+
+Print the number of calls and runtimes with :
+
+.. code-block:: python
+
+    print(timercounter.name_repr) # equivalent of print(timercounter)
+
+The result will be :
+
+.. code-block:: console
+
     TimerCounter(
     [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
     [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
@@ -41,8 +113,7 @@ class TimerCounter(Decorator):
     total number of calls : {total_runcall}
     total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
     )
-    
-    """
+"""
 
     def __init__(self):
         super().__init__()
@@ -71,29 +142,10 @@ class TimerCounter(Decorator):
 
     def __repr__(self) -> str:
         """
-        Returns the string representation in the following format:
-
-        TimerCounter(
-        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
-        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
-        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
-        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
-        -----------
-        total number of calls : {total_runcall}
-        total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
-        )
+        Returns the string representation.
+        Default = self.name_repr
         """
-        string = "TimerCounter(\n"
-        for func_name in self._timer.keys():
-            # Conversion in hours, minutes, seconds.
-            hours, remainder = divmod(self._timer[func_name], 3600)
-            minutes, seconds = divmod(remainder, 60)
-            string += f"[{func_name}] number of calls : {self._counter[func_name]} - cumulative runtime : {int(hours)}h {int(minutes)}m {seconds:.4f}s\n"
-        # Adding total runtime and total call number.
-        hours, remainder = divmod(self.total_runtime, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        string += f"-----------\ntotal number of calls : {self.total_runcall}\ntotal runtime : {int(hours)}h {int(minutes)}m {seconds:.4f}s\n)"
-        return string
+        return self.name_repr
 
     def _wrapper(self, func, *args, **kwargs):
         """
@@ -111,3 +163,38 @@ class TimerCounter(Decorator):
         self._counter[func.__name__] += 1 
         # Return outputs of func.
         return outputs
+    
+    def get_help(self) -> str:
+        """
+        Returns the documentation 'How to Use' of the decorator
+        """
+        return self.__help__
+
+    @property
+    def name_repr(self) -> str:
+        """
+        Returns the string representation in the following format:
+        
+        .. code-block:: console
+        
+            TimerCounter(
+            [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+            [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+            [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+            [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+            -----------
+            total number of calls : {total_runcall}
+            total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
+            )
+        """
+        string = "TimerCounter(\n"
+        for func_name in self._timer.keys():
+            # Conversion in hours, minutes, seconds.
+            hours, remainder = divmod(self._timer[func_name], 3600)
+            minutes, seconds = divmod(remainder, 60)
+            string += f"[{func_name}] number of calls : {self._counter[func_name]} - cumulative runtime : {int(hours)}h {int(minutes)}m {seconds:.4f}s\n"
+        # Adding total runtime and total call number.
+        hours, remainder = divmod(self.total_runtime, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        string += f"-----------\ntotal number of calls : {self.total_runcall}\ntotal runtime : {int(hours)}h {int(minutes)}m {seconds:.4f}s\n)"
+        return string

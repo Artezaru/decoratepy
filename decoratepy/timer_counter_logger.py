@@ -9,34 +9,144 @@ class TimerCounterLogger(Decorator):
     Compute the number of call of various functions and the runtime each call. 
 
     .. warning::
-        If 2 functions/methods have the same '__name__' attribute, the TimerCounterLogger will combined the two runtimes. 
+        If 2 functions/methods have the same '__name__' attribute, the TimerCounterLogger will combined the two runtimes.
+
+    HELP TimerCounterLogger
+    =======================
+    
+    Create a timer-counter-logger with :
+
+    .. code-block:: python
+
+        timercounterlogger = TimerCounterLogger()
+
+    Then decorate functions with the timer-counter-logger. 
+
+    .. code-block:: python
+
+        @timercounterlogger
+        def func_name():
+            pass
+
+    Initialize and clear the timer-counter-logger with : 
+
+    .. code-block:: python
+
+        timercounterlogger = initialize()
+
+    Use the functions and the timer-counter-logger will compute number of calls and runtime.
+
+    To deactivate and re-activate the timer-counter-logger, use :
+
+    .. code-block:: python
+
+        timercounterlogger.set_activated()
+        timercounterlogger.set_deactivated()
+
+    Print the logs with 3 differents methods:
+    
+
+    Method 1:
+
+    .. code-block:: python
+
+        print(timercounterlogger.name_repr) # equivalent of print(timercounterlogger)
+    
+    .. code-block:: console
+    
+        TimerCounterLogger(
+        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+        -----------
+        total number of calls : {total_runcall}
+        total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
+        )
+
+    Method 2:
+
+    .. code-block:: python
+
+        print(timercounterlogger.details_repr)
+    
+    .. code-block:: console
+    
+        TimerCounterLogger(
+        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+                [{date}] runtime : {hours}h {minutes}m {seconds}s
+                [{date}] runtime : {hours}h {minutes}m {seconds}s
+                [{date}] runtime : {hours}h {minutes}m {seconds}s
+        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+                [{date}] runtime : {hours}h {minutes}m {seconds}s
+                [{date}] runtime : {hours}h {minutes}m {seconds}s
+                [{date}] runtime : {hours}h {minutes}m {seconds}s
+        -----------
+        total number of calls : {total_runcall}
+        total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
+        )
+
+    Method 3:
+
+    .. code-block:: python
+
+        print(timercounterlogger.log_repr)
+    
+    .. code-block:: console
+    
+        TimerCounterLogger(
+        [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
+        [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
+        [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
+        [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
+        -----------
+        total number of calls : {total_runcall}
+        total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
+        )
     """
 
     __help__ = """
-    # =======================
-    # HELP TimerCounterLogger
-    # =======================
-    
-    Create a timer-counter-logger with :  
-    >>> timercounterlogger = TimerCounterLogger()
-    
-    Then decorate functions with the timer-counter-logger. (@timercounterlogger)
+HELP TimerCounterLogger
+=======================
 
-    Initialize and clear the timer-counter-logger with : 
-    >>> timercounterlogger = initialize()
+Create a timer-counter-logger with :
 
-    Use the functions and the timer-counter-logger will compute calls.
+.. code-block:: python
 
-    To deactivate and re-activate the timer-counter-logger, use :
-    >>> timercounterlogger.set_activated()
-    >>> timercounterlogger.set_deactivated()
+    timercounterlogger = TimerCounterLogger()
 
-    Print the calls with 3 differents representation (default = resume_repr):
-    
-    >>> print(timercounterlogger.resume_repr)
-    >>> print(timercounterlogger)
+Then decorate functions with the timer-counter-logger. 
 
-    The result will be :
+.. code-block:: python
+
+    @timercounterlogger
+    def func_name():
+        pass
+
+Initialize and clear the timer-counter-logger with : 
+
+.. code-block:: python
+
+    timercounterlogger = initialize()
+
+Use the functions and the timer-counter-logger will compute number of calls and runtime.
+
+To deactivate and re-activate the timer-counter-logger, use :
+
+.. code-block:: python
+
+    timercounterlogger.set_activated()
+    timercounterlogger.set_deactivated()
+
+Print the logs with 3 differents methods:
+
+
+Method 1:
+
+.. code-block:: python
+
+    print(timercounterlogger.name_repr) # equivalent of print(timercounterlogger)
+
+.. code-block:: console
+
     TimerCounterLogger(
     [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
     [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
@@ -45,22 +155,14 @@ class TimerCounterLogger(Decorator):
     total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
     )
 
-    >>> print(timercounterlogger.date_repr)
+Method 2:
 
-    The result will be :
-    TimerCounterLogger(
-    [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
-    [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
-    [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
-    [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
-    -----------
-    total number of calls : {total_runcall}
-    total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
-    )
+.. code-block:: python
 
-    >>> print(timercounterlogger.name_repr)
+    print(timercounterlogger.details_repr)
 
-    The result will be :
+.. code-block:: console
+
     TimerCounterLogger(
     [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
             [{date}] runtime : {hours}h {minutes}m {seconds}s
@@ -75,7 +177,24 @@ class TimerCounterLogger(Decorator):
     total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
     )
 
-    """
+Method 3:
+
+.. code-block:: python
+
+    print(timercounterlogger.log_repr)
+
+.. code-block:: console
+
+    TimerCounterLogger(
+    [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
+    [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
+    [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
+    [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
+    -----------
+    total number of calls : {total_runcall}
+    total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
+    )
+"""
 
 
     def __init__(self):
@@ -215,8 +334,9 @@ class TimerCounterLogger(Decorator):
     def __repr__(self) -> str:
         """
         Returns the string representation.
+        Default = self.name_repr
         """
-        return self.resume_repr
+        return self.name_repr
 
     def _wrapper(self, func, *args, **kwargs):
         """
@@ -230,23 +350,31 @@ class TimerCounterLogger(Decorator):
         self._logger.append([date, func.__name__, toc - tic])
         # Return outputs of func.
         return outputs
+    
+    def get_help(self) -> str:
+        """
+        Returns the documentation 'How to Use' of the decorator
+        """
+        return self.__help__
 
     #### REPRESENTATION 
 
     @property
-    def date_repr(self) -> str:
+    def log_repr(self) -> str:
         """
         Returns the string representation in the following format:
 
-        TimerCounterLogger(
-        [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
-        [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
-        [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
-        [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
-        -----------
-        total number of calls : {total_runcall}
-        total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
-        )
+        .. code-block:: console
+
+            TimerCounterLogger(
+            [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
+            [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
+            [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
+            [{date}] function : {func_name} - runtime : {hours}h {minutes}m {seconds}s
+            -----------
+            total number of calls : {total_runcall}
+            total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
+            )
         """
         string = "TimerCounterLogger(\n"
         self.sort_by_date()
@@ -265,19 +393,21 @@ class TimerCounterLogger(Decorator):
         """
         Returns the string representation in the following format:
 
-        TimerCounterLogger(
-        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
-                [{date}] runtime : {hours}h {minutes}m {seconds}s
-                [{date}] runtime : {hours}h {minutes}m {seconds}s
-                [{date}] runtime : {hours}h {minutes}m {seconds}s
-        [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
-                [{date}] runtime : {hours}h {minutes}m {seconds}s
-                [{date}] runtime : {hours}h {minutes}m {seconds}s
-                [{date}] runtime : {hours}h {minutes}m {seconds}s
-        -----------
-        total number of calls : {total_runcall}
-        total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
-        )
+        .. code-block:: console
+
+            TimerCounterLogger(
+            [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+                    [{date}] runtime : {hours}h {minutes}m {seconds}s
+                    [{date}] runtime : {hours}h {minutes}m {seconds}s
+                    [{date}] runtime : {hours}h {minutes}m {seconds}s
+            [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+                    [{date}] runtime : {hours}h {minutes}m {seconds}s
+                    [{date}] runtime : {hours}h {minutes}m {seconds}s
+                    [{date}] runtime : {hours}h {minutes}m {seconds}s
+            -----------
+            total number of calls : {total_runcall}
+            total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
+            )
 
         Parameters
         ----------
@@ -315,8 +445,40 @@ class TimerCounterLogger(Decorator):
 
     @property
     def name_repr(self) -> str:
-        return self._name_representation(develop=True)
+        """
+        Returns the string representation in the following format:
+
+        .. code-block:: console
+
+            TimerCounterLogger(
+            [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+            [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+            -----------
+            total number of calls : {total_runcall}
+            total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
+            )
+        """
+        return self._name_representation(develop=False)
     
     @property
-    def resume_repr(self) -> str:
-        return self._name_representation(develop=False)
+    def details_repr(self) -> str:
+        """
+        Returns the string representation in the following format:
+
+        .. code-block:: console
+
+            TimerCounterLogger(
+            [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+                    [{date}] runtime : {hours}h {minutes}m {seconds}s
+                    [{date}] runtime : {hours}h {minutes}m {seconds}s
+                    [{date}] runtime : {hours}h {minutes}m {seconds}s
+            [{func_name}] number of calls : {Ncalls} - cumulative runtime : {hours}h {minutes}m {seconds}s
+                    [{date}] runtime : {hours}h {minutes}m {seconds}s
+                    [{date}] runtime : {hours}h {minutes}m {seconds}s
+                    [{date}] runtime : {hours}h {minutes}m {seconds}s
+            -----------
+            total number of calls : {total_runcall}
+            total runtime : {total_runtime_hours}h {total_runtime_minutes}m {total_runtime_seconds}s
+            )
+        """
+        return self._name_representation(develop=True)

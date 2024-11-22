@@ -6,31 +6,102 @@ class Counter(Decorator):
 
     .. warning::
         If 2 functions/methods have the same '__name__' attribute, the Counter will combined the two runcalls. 
+
+    HELP Counter
+    ============
+    
+    Create a counter with :
+
+    .. code-block:: python
+
+        counter = Counter()
+
+    Then decorate functions with the counter. 
+
+    .. code-block:: python
+
+        @counter
+        def func_name():
+            pass
+
+    Initialize and clear the counter with : 
+
+    .. code-block:: python
+
+        counter = initialize()
+
+    Use the functions and the counter will compute number of calls.
+
+    To deactivate and re-activate the counter, use :
+
+    .. code-block:: python
+
+        counter.set_activated()
+        counter.set_deactivated()
+
+    Print the number of calls with :
+    
+    .. code-block:: python
+
+        print(counter.name_repr) # equivalent of print(counter)
+
+    The result will be :
+    
+    .. code-block:: console
+    
+        Counter(
+        [{func_name}] number of calls : {Ncalls}
+        [{func_name}] number of calls : {Ncalls}
+        [{func_name}] number of calls : {Ncalls}
+        [{func_name}] number of calls : {Ncalls}
+        -----------
+        total number of calls : {total_runcall}
+        )
     """
 
     __help__ = """
-    # =======================
-    # HELP Counter
-    # =======================
-    
-    Create a counter with :  
-    >>> counter = Counter()
-    
-    Then decorate functions with the counter. (@counter)
+HELP Counter
+============
 
-    Initialize and clear the counter with : 
-    >>> counter = initialize()
+Create a counter with :
 
-    Use the functions and the counter will compute call number.
+.. code-block:: python
 
-    To deactivate and re-activate the counter, use :
-    >>> counter.set_activated()
-    >>> counter.set_deactivated()
+    counter = Counter()
 
-    Print the number of call with :
-    >>> print(counter)
+Then decorate functions with the counter. 
 
-    The result will be :
+.. code-block:: python
+
+    @counter
+    def func_name():
+        pass
+
+Initialize and clear the counter with : 
+
+.. code-block:: python
+
+    counter = initialize()
+
+Use the functions and the counter will compute number of calls.
+
+To deactivate and re-activate the counter, use :
+
+.. code-block:: python
+
+    counter.set_activated()
+    counter.set_deactivated()
+
+Print the number of calls with :
+
+.. code-block:: python
+
+    print(counter.name_repr) # equivalent of print(counter)
+
+The result will be :
+
+.. code-block:: console
+
     Counter(
     [{func_name}] number of calls : {Ncalls}
     [{func_name}] number of calls : {Ncalls}
@@ -39,8 +110,7 @@ class Counter(Decorator):
     -----------
     total number of calls : {total_runcall}
     )
-    
-    """
+"""
 
     def __init__(self):
         super().__init__()
@@ -61,21 +131,10 @@ class Counter(Decorator):
 
     def __repr__(self) -> str:
         """
-        Returns the string representation in the following format:
-
-        Counter(
-        [{func_name}] number of calls : {Ncalls}
-        [{func_name}] number of calls : {Ncalls}
-        [{func_name}] number of calls : {Ncalls}
-        [{func_name}] number of calls : {Ncalls}
-        -----------
-        total number of calls : {total_runcall}
+        Returns the string representation.
+        Default = self.name_repr
         """
-        string = "Counter(\n"
-        for func_name in self._counter.keys():
-            string += f"[{func_name}] number of calls : {self._counter[func_name]}\n"
-        string += f"-----------\ntotal number of calls : {self.total_runcall}\n)"
-        return string
+        return self.name_repr
 
     def _wrapper(self, func, *args, **kwargs):
         """
@@ -89,3 +148,30 @@ class Counter(Decorator):
         self._counter[func.__name__] += 1
         # Return outputs of func.
         return outputs
+
+    def get_help(self) -> str:
+        """
+        Returns the documentation 'How to Use' of the decorator
+        """
+        return self.__help__
+
+    @property
+    def name_repr(self) -> str:
+        """
+        Returns the string representation in the following format:
+
+        .. code-block:: console
+        
+            Counter(
+            [{func_name}] number of calls : {Ncalls}
+            [{func_name}] number of calls : {Ncalls}
+            [{func_name}] number of calls : {Ncalls}
+            [{func_name}] number of calls : {Ncalls}
+            -----------
+            total number of calls : {total_runcall}
+        """
+        string = "Counter(\n"
+        for func_name in self._counter.keys():
+            string += f"[{func_name}] number of calls : {self._counter[func_name]}\n"
+        string += f"-----------\ntotal number of calls : {self.total_runcall}\n)"
+        return string

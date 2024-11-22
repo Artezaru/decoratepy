@@ -2,7 +2,6 @@ class Decorator(object):
     def __init__(self):
         self._activated = True # The decorator is activated by default.
     
-    @property
     def is_activated(self) -> bool:
         """ 
         Returns decorator activation status.
@@ -19,10 +18,9 @@ class Decorator(object):
         """
         return self._activated
 
-    @property
     def is_deactivated(self) -> bool:
         """ 
-        Returns decorator activation status.
+        Returns decorator deactivation status.
         
         Returns
         -------
@@ -61,7 +59,7 @@ class Decorator(object):
 
     def set_deactivated(self, deactivated: bool = True) -> None:
         """
-        Sets the decorator activation status.
+        Sets the decorator deactivation status.
         
         Parameters
         ----------
